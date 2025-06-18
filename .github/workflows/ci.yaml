@@ -22,7 +22,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           # Build the Frontend Docker image
-          docker build -t cleowoman/myfe ./myfe
+          docker build -t cleowoman/myfe .
 
           # Log in to Docker Hub using your credentials
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin

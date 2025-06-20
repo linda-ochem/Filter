@@ -24,9 +24,14 @@ app.get('/', (req,res)=>{
   res.render('index')
 })
 
-
-
-app.listen(PORT, ()=>{
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`server is running on port: ${PORT}`)
     console.log(`press CTRL + C to stop server`)
 })
+
+
+
+// app.listen(PORT, ()=>{
+//     console.log(`server is running on port: ${PORT}`)
+//     console.log(`press CTRL + C to stop server`)
+// })

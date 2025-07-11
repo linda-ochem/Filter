@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build and Push Docker Image to AWS ECR
 
 on:
   push:
@@ -10,22 +10,67 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      DOCKER_REPO: cleowoman
-      FRONTEND_DIR: frontend
+      AWS_REGION: us-east-1                    # Replace with your AWS region
+      ECR_REPOSITORY: lindareg              # Replace with your ECR repo name
+      IMAGE_TAG: latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Build and Push Docker Image
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, Tag, and Push Docker Image
         run: |
-          # Build the Frontend Docker image
-          docker build -t cleowoman/myfe .
+          REPOSITORY_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}
 
-          # Log in to Docker Hub using your credentials
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          # Build the Docker image
+          docker build -t $REPOSITORY_URI:${{ env.IMAGE_TAG }} .
 
-          # Push the Docker images to Docker Hub
-          docker push cleowoman/myfe
+          # Push the image to ECR
+          docker push $REPOSITORY_URI:${{ env.IMAGE_TAG }}
+
+
+
+
+
+# name: Build and Push Docker Image
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# jobs:
+#   build-and-push-image:
+#     runs-on: ubuntu-latest
+
+#     env:
+#       DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+#       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+#       DOCKER_REPO: cleowoman
+#       FRONTEND_DIR: frontend
+
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v2
+
+#       - name: Build and Push Docker Image
+#         run: |
+#           # Build the Frontend Docker image
+#           docker build -t cleowoman/myfe .
+
+#           # Log in to Docker Hub using your credentials
+#           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+#           # Push the Docker images to Docker Hub
+#           docker push cleowoman/myfe

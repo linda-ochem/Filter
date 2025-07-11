@@ -11,7 +11,7 @@ jobs:
 
     env:
       AWS_REGION: us-east-1                    # Replace with your AWS region
-      ECR_REPOSITORY: lindareg              # Replace with your ECR repo name
+      ECR_REPOSITORY: lindareg              # Replace with your ECR repository name
       IMAGE_TAG: latest
 
     steps:

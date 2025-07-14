@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: myfe
-          image: 288761745423.dkr.ecr.us-east-1.amazonaws.com/lindareg
+          image: 288761745423.dkr.ecr.us-east-1.amazonaws.com/filter
           ports:
             - containerPort: 8080
 
